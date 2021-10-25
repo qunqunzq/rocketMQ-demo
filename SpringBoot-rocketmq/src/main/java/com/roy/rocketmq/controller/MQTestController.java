@@ -48,7 +48,7 @@ public class MQTestController {
 
     @RequestMapping("/syncSendOrderly")
     public String syncSendOrderly(@RequestBody User message) {
-        producer.syncSendOrderly(JSON.toJSONString(message),"qun_test","order","10086");
+        producer.syncSendOrderly(JSON.toJSONString(message),"master","order","10086");
         return "消息发送完成";
     }
 
