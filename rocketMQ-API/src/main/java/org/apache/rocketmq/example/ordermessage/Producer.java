@@ -34,15 +34,15 @@ public class Producer {
     public static void main(String[] args) throws UnsupportedEncodingException {
         try {
             DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
-//            producer.setNamesrvAddr("192.168.232.128:9876");
+            producer.setNamesrvAddr("120.53.250.212:9876");
             producer.start();
 
             for (int i = 0; i < 10; i++) {
                 int orderId = i;
 
-                for(int j = 0 ; j <= 5 ; j ++){
+                for(int j = 0 ; j <= 30 ; j ++){
                     Message msg =
-                            new Message("OrderTopicTest", "order_"+orderId, "KEY" + orderId,
+                            new Message("MyConsumerGroup", "order_"+orderId, "KEY" + orderId,
                                     ("order_"+orderId+" step " + j).getBytes(RemotingHelper.DEFAULT_CHARSET));
                     SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
                         @Override

@@ -1,8 +1,10 @@
 package com.roy.rocketmq.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.roy.rocketmq.basic.SpringProducer;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.roy.rocketmq.domain.User;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -15,12 +17,12 @@ import javax.annotation.Resource;
 @RequestMapping("/MQTest")
 public class MQTestController {
 
-    private final String topic = "TestTopic";
+    private final String topic = "qun_sprinboot_test";
     @Resource
     private SpringProducer producer;
-    @RequestMapping("/sendMessage")
-    public String sendMessage(String message){
-        producer.sendMessage(topic,message);
+    @PostMapping("/sendMessage")
+    public String sendMessage(@RequestBody User message){
+        producer.sendMessage(topic, JSONObject.toJSONString(message));
         return "消息发送完成";
     }
 
@@ -30,4 +32,24 @@ public class MQTestController {
         producer.sendMessageInTransaction(topic,message);
         return "消息发送完成";
     }
+
+
+    @RequestMapping("/syncSend")
+    public String syncSend(@RequestBody User message) {
+        producer.syncSend(JSON.toJSONString(message),"qun_test","sync");
+        return "消息发送完成";
+    }
+
+    @RequestMapping("/asyncSend")
+    public String asyncSend(@RequestBody User message) {
+        producer.asyncSend(JSON.toJSONString(message),"qun_test","sync");
+        return "消息发送完成";
+    }
+
+    @RequestMapping("/syncSendOrderly")
+    public String syncSendOrderly(@RequestBody User message) {
+        producer.syncSendOrderly(JSON.toJSONString(message),"qun_test","order","10086");
+        return "消息发送完成";
+    }
+
 }

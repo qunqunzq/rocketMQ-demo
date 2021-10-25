@@ -1,13 +1,18 @@
 package com.roy.rocketmq.basic;
 
+import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeTypeUtils;
 
 import javax.annotation.Resource;
+import java.util.UUID;
 
 /**
  * @author ：楼兰
@@ -42,5 +47,46 @@ public class SpringProducer {
 
             Thread.sleep(10);
         }
+    }
+
+    public void syncSend(String msg,String topic,String tags){
+        final Message<String> build = MessageBuilder.withPayload(msg)
+                .setHeader(MessageConst.PROPERTY_KEYS, UUID.randomUUID().toString())
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN_VALUE)
+                .build();
+        String des = topic+":"+tags;
+        final SendResult sendResult = rocketMQTemplate.syncSend(des, build);
+        System.out.println(sendResult);
+    }
+
+    public void asyncSend(String msg, String topic, String tags) {
+        final Message<String> build = MessageBuilder.withPayload(msg)
+                .setHeader(MessageConst.PROPERTY_KEYS, UUID.randomUUID().toString())
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN_VALUE)
+                .build();
+        String des = topic+":"+tags;
+        rocketMQTemplate.asyncSend(des, build, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                System.out.println("发送成功");
+            }
+
+            @Override
+            public void onException(Throwable throwable) {
+                System.out.println("发送失败");
+            }
+        });
+        System.out.println("执行完了");
+
+    }
+
+    public void syncSendOrderly(String msg, String topic, String tags, String s) {
+        final Message<String> build = MessageBuilder.withPayload(msg)
+                .setHeader(MessageConst.PROPERTY_KEYS, UUID.randomUUID().toString())
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN_VALUE)
+                .build();
+        String des = topic+":"+tags;
+        final SendResult sendResult = rocketMQTemplate.syncSendOrderly(des, build, s);
+        System.out.println(sendResult);
     }
 }

@@ -27,26 +27,22 @@ public class Producer {
     public static void main(String[] args) throws MQClientException, InterruptedException {
 
         DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
-//        producer.setNamesrvAddr("192.168.232.128:9876");
+        producer.setNamesrvAddr("120.53.250.212:9876");
         producer.start();
-
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10; i++) {
             try {
-                {
-                    Message msg = new Message("TopicTest",
+                Message msg = new Message("Qun_Test",
                         "TagA",
-                        "OrderID188",
+                        "send",
                         "Hello world".getBytes(RemotingHelper.DEFAULT_CHARSET));
-                    //同步传递消息，消息会发给集群中的一个Broker节点。
-//                    SendResult sendResult = producer.send(msg);
-//                    System.out.printf("%s%n", sendResult);
-                    producer.sendOneway(msg);
-                }
-
+                //同步传递消息，消息会发给集群中的一个Broker节点。
+                  SendResult sendResult = producer.send(msg);
+                  System.out.printf("%s%n", sendResult);
+                  System.out.println(sendResult.getSendStatus());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
+        }
         producer.shutdown();
     }
 }
