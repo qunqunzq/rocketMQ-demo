@@ -2,6 +2,7 @@ package com.roy.rocketmq.basic;
 
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
+import org.apache.rocketmq.client.producer.TransactionSendResult;
 import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
@@ -88,5 +89,16 @@ public class SpringProducer {
         String des = topic+":"+tags;
         final SendResult sendResult = rocketMQTemplate.syncSendOrderly(des, build, s);
         System.out.println(sendResult);
+    }
+
+    public void sendBatch(String msg, String topic, String tags) {
+        final Message<String> build = MessageBuilder.withPayload(msg)
+                .setHeader(MessageConst.PROPERTY_KEYS, 10010)
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN_VALUE)
+                .build();
+        String des = topic+":"+tags;
+        final TransactionSendResult transactionSendResult = rocketMQTemplate.sendMessageInTransaction(des, build, des);
+        System.out.println("transactionSendResult"+transactionSendResult);
+        System.out.println("getLocalTransactionState"+transactionSendResult.getLocalTransactionState());
     }
 }

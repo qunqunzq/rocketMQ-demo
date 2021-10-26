@@ -52,4 +52,9 @@ public class MQTestController {
         return "消息发送完成";
     }
 
+    @RequestMapping("/send_batch")
+    public String sendBatch(@RequestBody User message) {
+        producer.sendBatch(JSON.toJSONString(message),"master","batch");
+        return "消息发送完成";
+    }
 }
