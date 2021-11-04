@@ -55,9 +55,9 @@ public class SpringProducer {
                 .setHeader(MessageConst.PROPERTY_KEYS, UUID.randomUUID().toString())
                 .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN_VALUE)
                 .build();
-        String des = topic+":"+tags;
+        String des = topic;
         final SendResult sendResult = rocketMQTemplate.syncSend(des, build);
-        System.out.println(sendResult);
+        System.out.println("发送消息："+sendResult);
     }
 
     public void asyncSend(String msg, String topic, String tags) {

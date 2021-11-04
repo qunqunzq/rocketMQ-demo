@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
  * @description:
  **/
 @Component
-@RocketMQMessageListener(consumerGroup = "Consumer1", selectorExpression = "*",topic = "qun_test",messageModel = MessageModel.CLUSTERING ,consumeMode = ConsumeMode.CONCURRENTLY)
-public class SpringConsumer implements RocketMQListener<User> {
+@RocketMQMessageListener(consumerGroup = "Consumer2", selectorExpression = "*",topic = "qun_test",messageModel = MessageModel.CLUSTERING ,consumeMode = ConsumeMode.CONCURRENTLY)
+public class SpringConsumer2 implements RocketMQListener<User> {
 
     @Override
     public void onMessage(User message) {
-        System.out.println("Consumer1接收到到消息：" + message.getUserAge());
+        System.out.println("Consumer2接收到到消息：" + message.getUserAge());
     }
 
 }

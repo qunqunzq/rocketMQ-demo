@@ -1,4 +1,4 @@
-package com.roy.scrocket.nio;
+package com.roy.scrocket.netty.demo;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -8,6 +8,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+
+import java.util.Scanner;
 
 /**
  * @author 张群
@@ -23,11 +27,18 @@ public class NettyClient {
             bootstrap.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
+                    ch.pipeline().addLast(new StringEncoder());
+                    ch.pipeline().addLast(new StringDecoder());
                     ch.pipeline().addLast(new NettyClientHandler());
                 }
             });
             final ChannelFuture sync = bootstrap.connect("127.0.0.1", 9000).sync();
-            sync.channel().closeFuture().sync();
+            final Channel channel = sync.channel();
+            final Scanner scanner = new Scanner(System.in);
+            while (scanner.hasNextLine()){
+                final String s = scanner.nextLine();
+                channel.writeAndFlush(s);
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

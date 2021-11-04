@@ -1,4 +1,4 @@
-package com.roy.scrocket.nio;
+package com.roy.scrocket.netty.demo;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -8,6 +8,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 /**
  * @author 张群
@@ -26,9 +28,12 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new StringDecoder());
+                            ch.pipeline().addLast(new StringEncoder());
                             ch.pipeline().addLast(new NettyServerHandler());
                         }
                     });
+            System.out.println("聊天室启动啦～～");
             final ChannelFuture sync = bootstrap.bind(9000).sync();
             sync.channel().closeFuture().sync();
         } catch (InterruptedException e) {
