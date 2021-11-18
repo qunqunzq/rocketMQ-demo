@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
  * @date ：Created in 2020/10/22
  * @description:
  **/
-@Component
-@RocketMQMessageListener(consumerGroup = "Consumer1", selectorExpression = "*",topic = "qun_test",messageModel = MessageModel.CLUSTERING ,consumeMode = ConsumeMode.CONCURRENTLY)
+//@Component
+//@RocketMQMessageListener(consumerGroup = "Consumer1", selectorExpression = "*",topic = "qun_test",messageModel = MessageModel.CLUSTERING ,consumeMode = ConsumeMode.CONCURRENTLY)
 public class SpringConsumer implements RocketMQListener<User> {
 
     @Override
